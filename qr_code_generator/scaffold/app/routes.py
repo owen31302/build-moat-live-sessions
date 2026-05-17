@@ -64,7 +64,24 @@ def redirect(token: str, request: Request, db: Session = Depends(get_db)):
     #    RedirectResponse(status_code=302).
     # 2. On miss, query the DB: raise 404 if not found, 410 if is_deleted or
     #    past expires_at; otherwise warm the cache, _record_scan(), and 302.
-    raise NotImplementedError("redirect() is not yet implemented")
+
+    if redirect_cache.get(token) is not None:
+        _record_scan(token, request, db)
+        return RedirectResponse(url=redirect_cache[token], status_code=302)
+
+    dbResult = db.query(UrlMapping)
+
+    if dbResult.filter(UrlMapping.token == token).first() is None:
+        raise HTTPException(status_code=404, detail="Not Found")
+
+    dBToken = dbResult.get(token)
+
+    if dBToken.is_deleted or (dBToken.expires_at is not None and dBToken.expires_at < datetime.utcnow()):
+        raise HTTPException(status_code=410, detail="Gone")
+
+    redirect_cache[token] = dBToken.original_url
+    _record_scan(token, request, db)
+    return RedirectResponse(url=dBToken.original_url, status_code=302)
 
 
 @router.get("/api/qr/{token}", response_model=QRInfoResponse)
