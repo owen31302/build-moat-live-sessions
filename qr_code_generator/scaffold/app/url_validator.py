@@ -27,4 +27,20 @@ def validate_url(url: str) -> str:
     # 1. Validate: length within MAX_URL_LENGTH, scheme is http/https via
     #    urlparse(), hostname is not in is_blocked_domain(). Raise ValueError otherwise.
     # 2. Normalize and return: lowercase, strip trailing slash, upgrade http→https.
-    raise NotImplementedError("validate_url() is not yet implemented")
+
+    if len(url) > MAX_URL_LENGTH:
+        raise ValueError(f"URL exceeds maximum length of {MAX_URL_LENGTH} characters")
+
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise ValueError("URL must have http or https scheme")
+
+    if is_blocked_domain(parsed.hostname):
+        raise ValueError("URL contains a blocked domain")
+
+    # Normalize the URL
+    normalized = url.lower().rstrip("/")
+    if parsed.scheme == "http":
+        normalized = normalized.replace("http://", "https://")
+
+    return normalized

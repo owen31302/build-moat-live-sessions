@@ -89,7 +89,7 @@ def handle_cancel_task(db: Session, *, job_id: int) -> dict:
 
 TOOL_DEFINITIONS: list[Tool] = [
     Tool(
-        name="task.create",
+        name="task_create",
         description="Schedule a new task for future execution",
         inputSchema={
             "type": "object",
@@ -108,23 +108,23 @@ TOOL_DEFINITIONS: list[Tool] = [
         },
     ),
     Tool(
-        name="task.list",
+        name="task_list",
         description="List all scheduled tasks",
         inputSchema={"type": "object", "properties": {}},
     ),
     Tool(
-        name="task.status",
+        name="task_status",
         description="Get the status of a scheduled task by job_id",
         inputSchema={
             "type": "object",
             "properties": {
-                "job_id": {"type": "integer", "description": "The job ID returned by task.create"},
+                "job_id": {"type": "integer", "description": "The job ID returned by task_create"},
             },
             "required": ["job_id"],
         },
     ),
     Tool(
-        name="task.cancel",
+        name="task_cancel",
         description="Cancel a scheduled task that hasn't completed yet",
         inputSchema={
             "type": "object",
@@ -154,7 +154,12 @@ TOOL_DEFINITIONS: list[Tool] = [
 # 3. Values are the handler functions defined earlier in this file
 #    (e.g., handle_create_task)
 # 4. There are 4 tools: task.create, task.list, task.status, task.cancel
-TOOL_REGISTRY: dict = {}
+TOOL_REGISTRY: dict = {
+    "task_create": handle_create_task,
+    "task_list": handle_list_tasks,
+    "task_status": handle_get_status,
+    "task_cancel": handle_cancel_task,
+}
 
 
 def route_tool_call(tool_name: str, arguments: dict, db: Session) -> dict:
@@ -174,7 +179,13 @@ def route_tool_call(tool_name: str, arguments: dict, db: Session) -> dict:
     # 2. If not found, return {"error": f"Unknown tool: {tool_name}"}
     # 3. If found, call the handler with db and **arguments
     # 4. Return the handler's result
-    return {"error": "Not implemented"}
+
+    """Route an MCP tool call to the correct handler."""
+    handler = TOOL_REGISTRY.get(tool_name)
+    if not handler:
+        return {"error": f"Unknown tool: {tool_name}"}
+    return handler(db=db, **arguments)
+    # return {"error": "Not implemented"}
 
 
 # ===================================================================

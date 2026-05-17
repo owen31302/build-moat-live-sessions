@@ -23,11 +23,20 @@ Answer these before you start coding:
 
 1. **Watcher vs Cron:** Why separate the watcher from the worker? What problems does a single cron job that both scans and executes have?
 
+worker cron job that scans and executes can lead to long-running processes, resource contention, and difficulty in scaling. If the cron job takes too long to execute tasks, it may miss the next scheduled run, leading to delays. Separating the watcher allows for more efficient scanning and queuing of tasks without being blocked by execution time.
+
 2. **Queue Layer:** Why put a queue between the watcher and worker instead of having the watcher call the worker directly? What are the benefits?
+
+We can limit the number of concurrent workers processing tasks, which helps manage resources and prevents overload. The queue also provides a buffer that allows the watcher to continue scanning for due tasks without waiting for workers to finish executing. This decoupling improves system resilience and scalability.
 
 3. **Time Bucket Partitioning:** Instead of `SELECT * WHERE scheduled_at <= now()`, why partition jobs by time bucket (e.g., hour)? What happens to query performance at 1M+ jobs without partitioning?
 
+this will help to avoid the whole table scan and improve query performance. With 1M+ jobs, a query without partitioning would be very slow as it would have to scan through all the records to find the due tasks. Time bucket partitioning allows us to quickly narrow down to the relevant subset of tasks, significantly improving performance.
+
 4. **Tool Naming:** Why `task.create` instead of `createTask`? How does naming convention affect LLM tool selection accuracy?
+
+tokenization and parsing by LLMs can be more consistent with a clear namespace and action verb pattern. `task.create` clearly indicates that it's an action related to tasks, which can help the LLM understand the context and select the appropriate tool more accurately. In contrast, `createTask` might be less intuitive for the LLM to parse, especially if there are many tools with similar naming.
+
 
 5. **Registry vs If-Else:** Why use a dictionary registry to route tool calls instead of if-else chains? What happens when you need to add the 20th tool?
 

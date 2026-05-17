@@ -19,15 +19,8 @@ def get_time_bucket(scheduled_at: datetime) -> str:
     efficiently query only the relevant partition instead of scanning
     the entire jobs table.
     """
-    # TODO: Implement this function
-    #
-    # Design decision: Time-based partitioning for efficient job lookup
-    #
-    # Hints:
-    # 1. Format the datetime into a string that represents an hourly bucket
-    # 2. Use strftime with a format like "%Y%m%d%H" (e.g., "2025030114")
-    # 3. This bucket string becomes the partition key in the jobs table
-    return "0000000000"
+    # Format: YYYYMMDDHH (e.g., "2025030114" for May 3, 2025 at 1 PM)
+    return scheduled_at.strftime("%Y%m%d%H")
 
 
 def find_due_jobs(current_time: datetime, db: Session) -> list[Job]:
@@ -37,17 +30,15 @@ def find_due_jobs(current_time: datetime, db: Session) -> list[Job]:
     then filters for jobs that are due (scheduled_at <= now) and still
     in 'pending' status.
     """
-    # TODO: Implement this function
-    #
-    # Design decision: Watcher pattern — poll DB for due jobs using
-    #   the time bucket as a partition key to avoid full table scans
-    #
-    # Hints:
-    # 1. Compute the current time bucket using get_time_bucket()
-    # 2. Query Job where time_bucket matches AND scheduled_at <= current_time
-    # 3. Only include jobs with status == "pending"
-    # 4. Return the list of matching Job objects
-    return []
+    # Get current hour bucket (e.g., "2025050314")
+    current_bucket = get_time_bucket(current_time)
+
+    # Query: all jobs in this hour, scheduled for now or earlier, still pending
+    return db.query(Job).filter(
+        Job.time_bucket == current_bucket,
+        Job.scheduled_at <= current_time,
+        Job.status == "pending"
+    ).all()
 
 
 def watcher_loop(interval: int = 10):
