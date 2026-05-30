@@ -1,0 +1,549 @@
+/* ==========================================================================
+   Base Design Tokens & System Setup
+   ========================================================================== */
+:root {
+    --bg-app: hsl(230, 25%, 7%);
+    --bg-card: hsla(230, 25%, 12%, 0.65);
+    --border-glass: hsla(230, 25%, 25%, 0.4);
+    
+    --text-primary: hsl(220, 20%, 95%);
+    --text-secondary: hsl(220, 15%, 70%);
+    --text-muted: hsl(220, 10%, 45%);
+    
+    --primary: hsl(265, 85%, 65%);
+    --primary-glow: hsla(265, 85%, 65%, 0.35);
+    --primary-hover: hsl(265, 90%, 72%);
+    
+    --success: hsl(150, 75%, 45%);
+    --error: hsl(355, 75%, 55%);
+    --warning: hsl(40, 80%, 55%);
+    
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: hsla(230, 20%, 30%, 0.5);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* Reset & Scaffold Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--bg-app);
+    color: var(--text-primary);
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-image: 
+        radial-gradient(at 10% 10%, hsla(265, 70%, 15%, 0.25) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, hsla(230, 70%, 15%, 0.2) 0px, transparent 50%);
+}
+
+.app-container {
+    width: 100%;
+    max-width: 1400px;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+/* ==========================================================================
+   Header Styles
+   ========================================================================== */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    backdrop-filter: blur(12px);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.logo-icon {
+    font-size: 2.2rem;
+    animation: float 4s ease-in-out infinite;
+}
+
+.logo-text h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--text-primary), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.logo-text p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.status-badge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: hsla(230, 10%, 10%, 0.4);
+    border: 1px solid var(--border-glass);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.pulse-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.pulse-indicator.red {
+    background: var(--error);
+    box-shadow: 0 0 0 0 hsla(355, 75%, 55%, 0.7);
+    animation: pulse-red 2s infinite;
+}
+
+.pulse-indicator.green {
+    background: var(--success);
+    box-shadow: 0 0 0 0 hsla(150, 75%, 45%, 0.7);
+    animation: pulse-green 2s infinite;
+}
+
+/* ==========================================================================
+   Dashboard Main Layout Grid
+   ========================================================================== */
+.app-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1.1fr;
+    gap: var(--space-lg);
+    flex: 1;
+}
+
+.main-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.sidebar-panel {
+    display: flex;
+}
+
+/* ==========================================================================
+   Glassmorphic Cards
+   ========================================================================== */
+.glass-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+    padding: var(--space-lg) var(--space-lg) var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.card-subtitle {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-top: 4px;
+}
+
+/* ==========================================================================
+   Control & Manager Panel
+   ========================================================================== */
+.control-card {
+    padding-bottom: var(--space-lg);
+}
+
+.control-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    padding: var(--space-md) var(--space-lg) 0 var(--space-lg);
+}
+
+.metrics {
+    display: flex;
+    gap: var(--space-lg);
+    background: hsla(230, 10%, 10%, 0.3);
+    padding: 10px var(--space-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-glass);
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.metric-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-hover);
+}
+
+/* ==========================================================================
+   Q&A Interactive Chat Terminal
+   ========================================================================== */
+.chat-card {
+    flex: 1;
+    min-height: 480px;
+    max-height: 600px;
+}
+
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.sample-queries {
+    display: flex;
+    gap: var(--space-sm);
+    padding: 0 var(--space-lg) var(--space-sm) var(--space-lg);
+    flex-wrap: wrap;
+    animation: fade-in 0.4s ease-out;
+}
+
+.query-chip {
+    background: hsla(230, 15%, 15%, 0.45);
+    border: 1px solid var(--border-glass);
+    color: var(--text-secondary);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.query-chip:hover {
+    border-color: var(--primary);
+    background: hsla(265, 80%, 30%, 0.15);
+    color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px 0 var(--primary-glow);
+}
+
+.chat-message {
+    max-width: 80%;
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    animation: slide-in 0.3s ease-out;
+}
+
+.bot-message {
+    background: hsla(230, 10%, 15%, 0.45);
+    border: 1px solid var(--border-glass);
+    border-top-left-radius: 4px;
+    align-self: flex-start;
+}
+
+.user-message {
+    background: linear-gradient(135deg, var(--primary), hsla(265, 80%, 50%, 0.8));
+    border-top-right-radius: 4px;
+    align-self: flex-end;
+    box-shadow: 0 4px 15px 0 var(--primary-glow);
+}
+
+.citation-tag {
+    background: hsla(230, 20%, 25%, 0.7);
+    color: var(--primary-hover);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border: 1px solid hsla(265, 85%, 65%, 0.3);
+    margin: 0 3px;
+    display: inline-block;
+    transition: var(--transition);
+}
+
+.citation-tag:hover {
+    background: var(--primary);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px 0 var(--primary-glow);
+}
+
+/* Chat Input Area */
+.chat-input-area {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+    border-top: 1px solid var(--border-glass);
+}
+
+.chat-input {
+    flex: 1;
+    background: hsla(230, 15%, 8%, 0.6);
+    border: 1px solid var(--border-glass);
+    padding: 14px var(--space-md);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* ==========================================================================
+   Right Panel: Source Inspector
+   ========================================================================== */
+.sidebar-card {
+    flex: 1;
+    max-height: 800px;
+}
+
+.sources-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.empty-sources {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 40px;
+    line-height: 1.6;
+}
+
+.source-item {
+    background: hsla(230, 10%, 15%, 0.25);
+    border: 1px solid var(--border-glass);
+    border-radius: 12px;
+    padding: var(--space-md);
+    transition: var(--transition);
+    animation: fade-in 0.4s ease-out;
+}
+
+.source-item:hover, .source-item.highlighted {
+    border-color: var(--primary);
+    background: hsla(265, 80%, 30%, 0.1);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
+    transform: translateX(3px);
+}
+
+.source-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+}
+
+.source-id {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--primary-hover);
+    font-weight: 500;
+}
+
+.source-score {
+    background: hsla(230, 20%, 30%, 0.5);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.source-heading {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.source-snippet {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    background: hsla(230, 15%, 5%, 0.2);
+    padding: var(--space-sm);
+    border-radius: 6px;
+    border-left: 2px solid var(--primary);
+    white-space: pre-wrap;
+}
+
+/* ==========================================================================
+   Button Framework & Animation Utilities
+   ========================================================================== */
+.btn {
+    border: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    box-shadow: 0 4px 15px 0 var(--primary-glow);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px 0 var(--primary-glow);
+}
+
+.btn-primary:active {
+    transform: translateY(1px);
+}
+
+.btn-submit {
+    background: var(--text-primary);
+    color: var(--bg-app);
+    padding: 0 24px;
+}
+
+.btn-submit:hover {
+    background: var(--text-secondary);
+}
+
+/* Spinner & skeleton loaders */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.loading-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, 
+        hsla(230, 15%, 15%, 0.3) 25%, 
+        hsla(230, 15%, 25%, 0.5) 50%, 
+        hsla(230, 15%, 15%, 0.3) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-glow 1.5s infinite;
+    border-radius: 4px;
+}
+
+/* Keyframe Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes slide-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes skeleton-glow {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 hsla(355, 75%, 55%, 0.7); }
+    70% { box-shadow: 0 0 0 10px hsla(355, 75%, 55%, 0); }
+    100% { box-shadow: 0 0 0 0 hsla(355, 75%, 55%, 0); }
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 hsla(150, 75%, 45%, 0.7); }
+    70% { box-shadow: 0 0 0 10px hsla(150, 75%, 45%, 0); }
+    100% { box-shadow: 0 0 0 0 hsla(150, 75%, 45%, 0); }
+}
+
+/* ==========================================================================
+   Responsive Adaptations
+   ========================================================================== */
+@media (max-width: 900px) {
+    .app-grid {
+        grid-template-columns: 1fr;
+    }
+    .sidebar-panel {
+        max-height: 400px;
+    }
+}

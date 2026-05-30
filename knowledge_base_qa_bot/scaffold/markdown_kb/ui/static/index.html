@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Base Q&A Dashboard</title>
+    <!-- Premium Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/ui/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Dashboard Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <span class="logo-icon">🔮</span>
+                <div class="logo-text">
+                    <h1>Moat Bot</h1>
+                    <p>BM25 Grounded Knowledge Assistant</p>
+                </div>
+            </div>
+            <div class="status-badge" id="index-status-badge">
+                <span class="pulse-indicator red" id="status-pulse"></span>
+                <span id="status-text">Index Status: Unindexed</span>
+            </div>
+        </header>
+
+        <!-- Dashboard Grid -->
+        <main class="app-grid">
+            <!-- Left Side: Controls & Chat -->
+            <section class="main-panel">
+                <!-- Control Panel Card -->
+                <div class="glass-card control-card">
+                    <div class="card-header">
+                        <h2>Search Index Manager</h2>
+                        <span class="card-subtitle">Ingest local markdown documentation</span>
+                    </div>
+                    <div class="control-actions">
+                        <button class="btn btn-primary" id="btn-index">
+                            <span id="btn-index-text">Rebuild Search Index</span>
+                            <span class="spinner" id="index-spinner" style="display: none;"></span>
+                        </button>
+                        <div class="metrics" id="index-metrics" style="display: none;">
+                            <div class="metric-item">
+                                <span class="metric-label">Files</span>
+                                <span class="metric-value" id="metric-files">0</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Sections</span>
+                                <span class="metric-value" id="metric-sections">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Terminal Card -->
+                <div class="glass-card chat-card">
+                    <div class="card-header">
+                        <h2>Grounded Q&A Terminal</h2>
+                        <span class="card-subtitle">Chat with Gemini 2.5 Flash</span>
+                    </div>
+                    <div class="chat-history" id="chat-history">
+                        <div class="chat-message bot-message">
+                            Hi! I am your grounded AI assistant. Once the search index is built, you can ask me anything about local policies, cancels, or shipping guidelines!
+                        </div>
+                    </div>
+                    <!-- Interactive Sample Query Chips -->
+                    <div class="sample-queries" id="sample-queries" style="display: none;">
+                        <span class="query-chip" data-query="How long do refunds take?">How long do refunds take?</span>
+                        <span class="query-chip" data-query="Can I change my email address?">Can I change my email?</span>
+                        <span class="query-chip" data-query="Are expedited shipping fees refundable?">Expedited shipping rules</span>
+                    </div>
+                    <form class="chat-input-area" id="chat-form">
+                        <input type="text" class="chat-input" id="chat-input" placeholder="Type your grounded query here..." required autocomplete="off">
+                        <button type="submit" class="btn btn-submit" id="btn-send">Send</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Right Side: Document Sources Inspector -->
+            <aside class="sidebar-panel">
+                <div class="glass-card sidebar-card">
+                    <div class="card-header">
+                        <h2>Source Inspector</h2>
+                        <span class="card-subtitle">BM25 retrieved ranking sections</span>
+                    </div>
+                    <div class="sources-list" id="sources-list">
+                        <div class="empty-sources">
+                            No search query executed yet. Ask a question to view the retrieved context blocks.
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+    <script src="/ui/static/app.js"></script>
+</body>
+</html>
